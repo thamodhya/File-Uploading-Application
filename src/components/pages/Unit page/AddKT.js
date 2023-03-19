@@ -1,79 +1,56 @@
- 
-import React, {Component} from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import swal from 'sweetalert';
+const AddKT = () => {
+  const [ktName, setKtName] = useState('');
+  const [ktIntro, setKtIntro] = useState('');
 
-export default class AddKT extends Component {
+  const onChangeKtName = (e) => {
+    setKtName(e.target.value);
+  };
 
-    constructor(props) {
-        super(props);
+  const onChangeKtIntro = (e) => {
+    setKtIntro(e.target.value);
+  };
 
-        this.onChangektname = this.onChangektname.bind(this);
-        this.onChangektintro = this.onChangektintro.bind(this);
-         
-        this.onSubmit = this.onSubmit.bind(this);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    swal({
+      icon: "success",
+      text: "Successfully created",
+    });
+    console.log(`Form submitted:`);
+    console.log(`KT Name: ${ktName}`);
+    console.log(`KT Introduction: ${ktIntro}`);
 
-        this.state = {
-            kt_name: '',
-            kt_intro: '',
-             
-        }
-    }
+    const newKT = {
+      kt_name: ktName,
+      kt_intro: ktIntro,
+    };
 
-    onChangektname(e) {
-        this.setState({
-            kt_name: e.target.value
-        });
-    }
+    axios.post('http://localhost:4000/kts/add', newKT).then((res) => console.log(res.data));
 
-    onChangektintro(e) {
-        this.setState({
-            kt_intro: e.target.value
-        });
-    }
+    setKtName('');
+    setKtIntro('');
+  };
 
-     
-    onSubmit(e) {
-        e.preventDefault();
+  return (
+    <div style={{ marginTop: 20 }}>
+      <form onSubmit={onSubmit}>
+        <div className="form-control">
+          <label>KT </label>
+          <input type="text" className="form-control" value={ktName} required onChange={onChangeKtName} />
+          <br></br>
+          <label>Introduction </label>
+          <input type="text" className="form-control" value={ktIntro} onChange={onChangeKtIntro} />
+          <br></br>
+          <input type="file" class="form-control" aria-label="file example" required />
+          <br></br>
+          <input type="submit" value="Save KT Session" className="btn btn-primary" />
+        </div>
+      </form>
+    </div>
+  );
+};
 
-        console.log(`Form submitted:`);
-        console.log(`KT Name: ${this.state.kt_name}`);
-        console.log(`KT Introduction: ${this.state.kt_intro}`);
-         
-         
-
-        this.setState({
-            kt_name: '',
-            kt_intro: '',
-             
-        })
-    }
-
-    render() {
-        return (
-            <div style={{marginTop: 20}}>
-               
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-control">
-                        <label>KT </label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.kt_name}
-                                required
-                                onChange={this.onChangektname}
-                                />
-                        <br></br>
-                        <label>Introduction </label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.kt_intro}
-                                onChange={this.onChangektintro}
-                                />
-                        <br></br>
-                        <input type="file" class="form-control" aria-label="file example" required/>
-                        <br></br>
-                        <input type="submit" value="Save KT Session" className="btn btn-primary" />
-                    </div>
-                </form>
-            </div>
-        )
-    }
-}
+export default AddKT;

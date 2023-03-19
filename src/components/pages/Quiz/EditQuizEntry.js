@@ -1,108 +1,103 @@
-import React, {Component} from 'react';
-//import axios from 'axios';
+import React, { useState ,useEffect} from 'react';
+import axios from 'axios';
+import { FaPencilAlt } from 'react-icons/fa';
+import swal from "sweetalert";
+import { useParams } from "react-router-dom";
  
-// import { useParams } from "react-router-dom";
-export default class EditTask extends Component {
-     
-    constructor(props) {
-        super(props);
 
-        this.onChangeunitname = this.onChangeunitname.bind(this);
-        this.onChangeunitintro = this.onChangeunitintro.bind(this);
-         
-        this.onSubmit = this.onSubmit.bind(this);
+const EditEntry = (props) => {
+  const { id } = useParams();
 
-        this.state = {
-            unit_name: '',
-            unit_intro: '',
-             
-        }
-    }
+  const [modal, setModal] = useState(null);
+   
+  const [updatedTodo, setUpdatedTodo] = useState({
+    quizName: '',
+    quizDesc: '',
+});
 
-    // componentDidMount() {
-         
-    //     axios.get('http://localhost:4000/chapter/'+this.props.match.params.id)
-    //         .then(response => {
-    //             this.setState({
-    //                 unit_name: response.data.unit_name,
-    //                 unit_intro: response.data.unit_intro,
-                     
-    //             })
-    //         })
-    //         .catch(function(error) {
-    //             console.log(error)
-    //         })
-    // }
+useEffect(() => {
+  axios.get(`http://localhost:4000/units/${id}`)
+    .then(response => {
+       
+      const { quizName, quizDesc } = response.data.quiz;
+      setUpdatedTodo({ quizName, quizDesc });
+       
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, [id]);
 
-    onChangeunitname(e) {
-        this.setState({
-            unit_name: e.target.value
-        });
-    }
+  const onChange = (e) => {
+    setUpdatedTodo({
+      ...updatedTodo,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    onChangeunitintro(e) {
-        this.setState({
-            unit_intro: e.target.value
-        });
-    }
+  const onUpdate = (e) => {
+    e.preventDefault();
+    console.log({id});
+    axios.post(`http://localhost:4000/units/quizentry/update/${id}`, updatedTodo)
+      .then(() => {
+        setModal(null);
+        swal({
+            icon: "success",
+            text: "Successfully updated",
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+       
+  };  
 
-     
-
-    onSubmit(e) {
-        e.preventDefault();
-        // const obj = {
-        //     unit_name: this.state.unit_name,
-        //     unit_intro: this.state.unit_intro,
-             
-        // };
-        // axios.post('http://localhost:4000/chapter/update/'+this.props.match.params.id, obj)
-        //     .then(res => console.log(res.data));
-
-        // this.props.history.push('/');
-    }
-
-    render() {
-        return (
-
-            <div class="modal fade" id="editentry" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-      {/* <h1 class="modal-title fs-5" id="exampleModalLabel">Chapter Content</h1> */}
-         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-       </div>
-       <div class="modal-body"> 
-              
-                <form onSubmit={this.onSubmit}>
-                     
-                        <label>Name</label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.unit_name}
-                                onChange={this.onChangeunitname}
-                                />
-
-                                <br></br>
-                     
-                        <label>Description</label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.unit_intro}
-                                onChange={this.onChangeunitintro}
-                                />
-                    
-                     
-                    <div class="modal-footer">
+  return (
+    <div>
+              <p>
+                <FaPencilAlt
+                  className='editIcon'
+                  type='button'
+                  class='rounded float-end'
+                  style={{ color: 'blue' }}
+                  data-bs-toggle='modal'
+                  data-bs-target={`#edit-modal-${id}`}
+                />
+              </p>
+              <div className="modal fade" id={`edit-modal-${id}`} tabIndex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="edit-modal-label">Edit</h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+              </div>
+              <div className="modal-body">
+                <form onSubmit={onUpdate}>
+                  <div className="mb-3">
+                    <label htmlFor="quizName" className="form-label">Quiz Name</label>
+                    <input type="text" className="form-control" id="quizName" name="quizName" value={updatedTodo.quizName} onChange={onChange} />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="quizDesc" className="form-label">Quiz Description</label>
+                    <input type="text" className="form-control" id="quizDesc" name="quizDesc" value={updatedTodo.quizDesc} onChange={onChange} />
+                  </div>
+                  <div class="modal-footer">
                         <input type="submit" value="Update" className="btn btn-primary" />
                     </div>
                 </form>
+              </div>
             </div>
+          </div>
+        </div>
             </div>
-            </div>
-            </div>
-            
+     
 
+       
 
-        )
-    }
-}
+    
+  );
+};
+
+export default EditEntry;
+
+ 

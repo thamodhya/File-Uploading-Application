@@ -1,79 +1,67 @@
- 
-import React, {Component} from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import swal from 'sweetalert';
+function AddArticle() {
+    const [artName, setArtName] = useState('');
+    const [artIntro, setArtIntro] = useState('');
+  
+    const onChangeArtName = (e) => {
+      setArtName(e.target.value);
+    };
+  
+    const onChangeArtIntro = (e) => {
+      setArtIntro(e.target.value);
+    };
+  
+    const onSubmit = (e) => {
+      e.preventDefault();
+      swal({
+        icon: "success",
+        text: "Successfully created",
+      });
+      console.log(`Form submitted:`);
+      console.log(`Article Name: ${artName}`);
+      console.log(`Article Introduction: ${artIntro}`);
+  
+      const newArticle = {
+        art_name: artName,
+        art_intro: artIntro,
+      };
+  
+      axios.post('http://localhost:4000/arts/add', newArticle)
+        .then(res => console.log(res.data));
+  
+      setArtName('');
+      setArtIntro('');
+    };
+  
+    return (
+      <div style={{marginTop: 20}}>
+        <form onSubmit={onSubmit}>
+          <div className="form-control">
+            <label>Article</label>
+            <input  type="text"
+                    className="form-control"
+                    value={artName}
+                    required
+                    onChange={onChangeArtName}
+            />
+            <br></br>
+            <label>Introduction </label>
+            <input  type="text"
+                    className="form-control"
+                    value={artIntro}
+                    onChange={onChangeArtIntro}
+            />
+            <br></br>
+            <input type="file" className="form-control" aria-label="file example" required/>
+            <br></br>
+            <input type="submit" value="Save Article" className="btn btn-primary" />
+          </div>
+        </form>
+      </div>
+    );
+  }
+  
+  export default AddArticle;
 
-export default class AddArticle extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.onChangeartname = this.onChangeartname.bind(this);
-        this.onChangeartintro = this.onChangeartintro.bind(this);
-         
-        this.onSubmit = this.onSubmit.bind(this);
-
-        this.state = {
-            art_name: '',
-            art_intro: '',
-             
-        }
-    }
-
-    onChangeartname(e) {
-        this.setState({
-            art_name: e.target.value
-        });
-    }
-
-    onChangeartintro(e) {
-        this.setState({
-            art_intro: e.target.value
-        });
-    }
-
-     
-    onSubmit(e) {
-        e.preventDefault();
-
-        console.log(`Form submitted:`);
-        console.log(`Article Name: ${this.state.art_name}`);
-        console.log(`Article Introduction: ${this.state.art_intro}`);
-         
-         
-
-        this.setState({
-            art_name: '',
-            art_intro: '',
-             
-        })
-    }
-
-    render() {
-        return (
-            <div style={{marginTop: 20}}>
-               
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-control">
-                        <label>Article</label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.art_name}
-                                required
-                                onChange={this.onChangeartname}
-                                />
-                        <br></br>
-                        <label>Introduction </label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.art_intro}
-                                onChange={this.onChangeartintro}
-                                />
-                        <br></br>
-                        <input type="file" class="form-control" aria-label="file example" required/>
-                        <br></br>
-                        <input type="submit" value="Save Article" className="btn btn-primary" />
-                    </div>
-                </form>
-            </div>
-        )
-    }
-}

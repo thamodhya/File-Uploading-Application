@@ -7,7 +7,9 @@ import AddArticle from './AddArticle';
 import Header from '../Header';
 import pdf from './pdf.png';
 import Del from '../Del';
-import EditArticle from './EditArticle';
+import Edit from '../Ed';
+import ArticleList from './ArticleList';
+ 
  
 function Article() {
     const [showAddTask, setShowAddTask] = useState(false); // To reveal add task form
@@ -20,6 +22,7 @@ function Article() {
 
 {/* Revealing of Add Task Form */}
 {showAddTask && <AddArticle   />}
+ 
  <br></br>
 <div className='card'> 
 <div className="card-body" style={{backgroundColor:"#DDEDF8"}}>
@@ -27,7 +30,7 @@ function Article() {
     <h3 style={{ font: "25px" , color: "#000000" }}>Article 01</h3>
     <div> 
     <FaPencilAlt type="button" data-bs-toggle="modal" data-bs-target="#editarticle" className="editIcon" class="rounded float-end" style={{color:"blue",justifyContent:"end"}}/>
-    <EditArticle/> 
+    <Edit/> 
     </div> 
     </div>
 
@@ -43,6 +46,7 @@ function Article() {
      
 </div>
 </div>
+<ArticleList></ArticleList>
  </div>
 </div> 
     

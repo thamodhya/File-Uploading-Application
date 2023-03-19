@@ -2,16 +2,15 @@ import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
-import swal from "sweetalert";
-
+import swal from 'sweetalert';
 const Delete = ({ todo }) => {
     const navigate = useNavigate();  
 
   const onDelete = () => {
-    axios.delete(`http://localhost:4000/units/delete/${todo._id}`)
+    axios.delete(`http://localhost:4000/kts/delete/${todo._id}`)
       .then(res => console.log(res.data))
       .catch(err => console.log(err));
-    navigate('/');
+    navigate('/Unit');
     swal({
       icon: "success",
       text: "Successfully deleted",
@@ -38,7 +37,7 @@ const Delete = ({ todo }) => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"  ></button>
             </div>
             <div className="modal-body">
-              Are you sure you want to delete this todo?
+              Are you sure you want to delete?
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -55,6 +54,3 @@ const Delete = ({ todo }) => {
 };
 
 export default Delete;
-
-
- 

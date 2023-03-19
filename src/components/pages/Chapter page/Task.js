@@ -1,47 +1,39 @@
-import React  from 'react';
-//import { Link } from 'react-router-dom';
+import Tasks from './Tasks';
+ 
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
  
-import DeleteTask from './DeleteTask';
+const TodosList = () => {
+  const [todos, setTodos] = useState([]);
 
-export default class Task extends React.Component {
+  useEffect(() => {
+    axios.get('http://localhost:4000/units/')
+      .then(response => {
+        setTodos(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
-    constructor(props) {
-        super(props);
-        this.state = {todos: []};
-    }
+   
+   
 
-    componentDidMount() {
-        axios.get('http://localhost:4000/chapter/')
-            .then(res => {
-                this.setState({todos: res.data});
-            })
-            .catch((error)=> {
-                console.log(error);
-            })
-    }
-
-    componentDidUpdate() {
-        axios.get('http://localhost:4000/chapter/')
-        .then(res  => {
-            this.setState({todos: res.data});
-        })
-        .catch(function (error) {
-            console.log(error);
-        })   
-    }
-
-    todoList() {
-        return this.state.todos.map((res, i) =>{
-            return <DeleteTask todo={res} key={i} />;
-        });
-    }
-
-    render() {
-        return (
-            <div>
-              { this.todoList() }
-        </div>
-        )
-    }
+  return (
+    <div>
+       
+            <div> 
+          {todos.map(todo => {
+            return (
+              <Tasks key={todo._id} todo={todo} />
+            )
+          })}
+          </div>
+            
+          </div>
+         
+    
+  );
 }
+
+export default TodosList;

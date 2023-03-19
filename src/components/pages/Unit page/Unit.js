@@ -7,7 +7,8 @@ import AddKT from './AddKT';
 import Header from '../Header';
 import video from './video.png';
 import Del from '../Del';
-import EditKT from './EditKT';
+import Ed from '../Ed';
+import UnitList from './UnitList';
 
 function Unit() {
     const [showAddTask, setShowAddTask] = useState(false); // To reveal add task form
@@ -27,7 +28,7 @@ function Unit() {
     <h3 style={{ font: "25px" , color: "#000000" }}>KT Session 01</h3>
     <div> 
     <FaPencilAlt type="button" data-bs-toggle="modal" data-bs-target="#editkt" className="editIcon" class="rounded float-end" style={{color:"blue",justifyContent:"end"}}/>
-    <EditKT/> 
+    <Ed/> 
     </div> 
     </div>
 
@@ -43,6 +44,7 @@ function Unit() {
     </div>
      
 </div>
+<UnitList></UnitList>
 </div>
  
 </div> 

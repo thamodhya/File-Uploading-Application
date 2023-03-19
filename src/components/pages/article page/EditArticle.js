@@ -1,221 +1,76 @@
-import React, {Component} from 'react';
-//import axios from 'axios';
- 
-// import { useParams } from "react-router-dom";
-export default class EditTask extends Component {
+import { FaPencilAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import axios from 'axios';
+import swal from 'sweetalert';
+const Edit = ({ todo }) => {
      
-    constructor(props) {
-        super(props);
+  const [modal, setModal] = useState(null);
+   
+  const [updatedTodo, setUpdatedTodo] = useState(todo);
 
-        this.onChangeunitname = this.onChangeunitname.bind(this);
-        this.onChangeunitintro = this.onChangeunitintro.bind(this);
-         
-        this.onSubmit = this.onSubmit.bind(this);
+  const onChange = (e) => {
+    console.log('onChange', e.target.name, e.target.value);
+    setUpdatedTodo({
+      ...updatedTodo,
+      [e.target.name]: e.target.value
+    });
+  };
 
-        this.state = {
-            unit_name: '',
-            unit_intro: '',
-             
-        }
-    }
-
-    // componentDidMount() {
-         
-    //     axios.get('http://localhost:4000/chapter/'+this.props.match.params.id)
-    //         .then(response => {
-    //             this.setState({
-    //                 unit_name: response.data.unit_name,
-    //                 unit_intro: response.data.unit_intro,
-                     
-    //             })
-    //         })
-    //         .catch(function(error) {
-    //             console.log(error)
-    //         })
-    // }
-
-    onChangeunitname(e) {
-        this.setState({
-            unit_name: e.target.value
-        });
-    }
-
-    onChangeunitintro(e) {
-        this.setState({
-            unit_intro: e.target.value
-        });
-    }
-
-     
-
-    onSubmit(e) {
-        e.preventDefault();
-        // const obj = {
-        //     unit_name: this.state.unit_name,
-        //     unit_intro: this.state.unit_intro,
-             
-        // };
-        // axios.post('http://localhost:4000/chapter/update/'+this.props.match.params.id, obj)
-        //     .then(res => console.log(res.data));
-
-        // this.props.history.push('/');
-    }
-
-    render() {
-        return (
-
-            <div class="modal fade" id="editarticle" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-      <h1 class="modal-title fs-5" id="exampleModalLabel">Content</h1>
-         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-       </div>
-       <div class="modal-body"> 
-              
-                <form onSubmit={this.onSubmit}>
-                     
-                        <label>Name</label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.unit_name}
-                                onChange={this.onChangeunitname}
-                                />
-
-                                <br></br>
-                     
-                        <label>Introduction </label>
-                        <input  type="text"
-                                className="form-control"
-                                value={this.state.unit_intro}
-                                onChange={this.onChangeunitintro}
-                                />
-                    
-                    <br></br>
-                    <div class="input-group mb-3">
-                    <label class="input-group-text" for="inputGroupFile01">Update</label>
-                    <input type="file" class="form-control" id="inputGroupFile01"/>
-                    </div>
-                    <br></br>
-                     
-                    <div class="modal-footer">
-                        <input type="submit" value="Update Article" className="btn btn-primary" />
-                    </div>
-                </form>
+  const onUpdate = (e) => {
+    e.preventDefault();
+    console.log('onUpdate', updatedTodo);
+    axios.post(`http://localhost:4000/arts/update/${todo._id}`, updatedTodo)
+      .then(() => {
+        setModal(null);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      swal({
+        icon: "success",
+        text: "Successfully updated",
+      });
+  };
+   
+  return (
+    <div>
+      <p>
+        <FaPencilAlt
+          className='editIcon'
+          type='button'
+          class='rounded float-end'
+          style={{ color: 'blue' }}
+          data-bs-toggle='modal'
+          data-bs-target={`#edit-modal-${todo._id}`}
+        />
+      </p>
+      <div className="modal fade" id={`edit-modal-${todo._id}`} tabIndex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="edit-modal-label">Edit</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
             </div>
+            <div className="modal-body">
+              <form onSubmit={onUpdate}>
+                <div className="mb-3">
+                  <label htmlFor="art_name" className="form-label">Article Name</label>
+                  <input type="text" className="form-control" id="art_name" name="art_name" value={updatedTodo.art_name} onChange={onChange} />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="art_intro" className="form-label">Article Introduction</label>
+                  <input type="text" className="form-control" id="art_intro" name="art_intro" value={updatedTodo.art_intro} onChange={onChange} />
+                </div>
+                <div class="modal-footer">
+                  <input type="submit" value="Update Unit" className="btn btn-primary" />
+                </div>
+              </form>
             </div>
-            </div>
-            </div>
-            
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-
-        )
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, {Component} from 'react';
-// import axios from 'axios';
- 
-// // import { useParams } from "react-router-dom";
-// export default class EditTask extends Component {
-     
-//     constructor(props) {
-//         super(props);
-
-//         this.onChangeartname = this.onChangeartname.bind(this);
-//         this.onChangeartintro = this.onChangeartintro.bind(this);
-         
-//         this.onSubmit = this.onSubmit.bind(this);
-
-//         this.state = {
-//             art_name: '',
-//             art_intro: '',
-             
-//         }
-//     }
-
-//     componentDidMount() {
-         
-//         axios.get('http://localhost:4000/chapter/'+this.props.match.params.id)
-//             .then(response => {
-//                 this.setState({
-//                     art_name: response.data.art_name,
-//                     art_intro: response.data.art_intro,
-                     
-//                 })
-//             })
-//             .catch(function(error) {
-//                 console.log(error)
-//             })
-//     }
-
-//     onChangeunitname(e) {
-//         this.setState({
-//             art_name: e.target.value
-//         });
-//     }
-
-//     onChangeunitintro(e) {
-//         this.setState({
-//             art_intro: e.target.value
-//         });
-//     }
-
-     
-
-//     onSubmit(e) {
-//         e.preventDefault();
-//         const obj = {
-//             art_name: this.state.art_name,
-//             art_intro: this.state.art_intro,
-             
-//         };
-//         axios.post('http://localhost:4000/chapter/update/'+this.props.match.params.id, obj)
-//             .then(res => console.log(res.data));
-
-//         this.props.history.push('/');
-//     }
-
-//     render() {
-//         return (
-//             <div style={{marginTop: 20}}>
-//                 <h3>Chapter Content</h3>
-//                 <form onSubmit={this.onSubmit}>
-//                     <div className="form-control">
-//                         <label>Unit </label>
-//                         <input  type="text"
-//                                 className="form-control"
-//                                 value={this.state.art_name}
-//                                 onChange={this.onChangeartname}
-//                                 />
-//                     </div>
-//                     <div className="form-control">
-//                         <label>Introduction </label>
-//                         <input  type="text"
-//                                 className="form-control"
-//                                 value={this.state.art_intro}
-//                                 onChange={this.onChangeartintro}
-//                                 />
-//                     </div>
-                     
-//                     <div className="form-control">
-//                         <input type="submit" value="update Unit" className="btn btn-primary" />
-//                     </div>
-//                 </form>
-//             </div>
-//         )
-//     }
-// }
+export default Edit;

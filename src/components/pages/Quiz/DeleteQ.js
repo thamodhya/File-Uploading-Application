@@ -1,85 +1,59 @@
-import { Component } from "react"
-import axios from 'axios'
-import { FaPencilAlt, FaTimes } from 'react-icons/fa';
-import EditQ from "./EditQ";
-import Del from "../Del";
-//import { Link } from "react-router-dom";
-export default class DeleteTask extends Component{
-constructor(props) {
-  super(props)
-  this.deleteQuestion = this.deleteQuestion.bind(this)
-}
+ 
 
-deleteQuestion() {
-  axios
-    .delete(
-      'http://localhost:4000/chapter/delete-question/' + this.props.todo._id,
-    )
-    .then((res) => {
-      console.log('Unit successfully deleted!')
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-}
+import React from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { FaTimes } from 'react-icons/fa';
+import swal from "sweetalert";
 
+const Delete = ({ todo }) => {
+    const navigate = useNavigate();  
 
-render() {
-  return(
+  const onDelete = () => {
+    axios.delete(`http://localhost:4000/units/delete/${todo._id}`)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err));
+    navigate('/quiz');
+    swal({
+      icon: "success",
+      text: "Successfully deleted",
+    });
+  }
+
+  return (
     <div>
-        <div className='card'> 
-            <div className="card-body" style={{backgroundColor:"#DDEDF8"}}>
-                <div class="col-lg-12">
-                <h3 style={{ font: "25px" , color: "#000000" }}>{this.props.todo.quiz}</h3>
-                 
-                </div>
-
-                <div class="col-lg-12">    
-                <p>{this.props.todo.op1} </p>
-                </div> 
-                <div class="col-lg-12">    
-                <p>{this.props.todo.op2} </p>
-                </div> 
-                <div class="col-lg-12">    
-                <p>{this.props.todo.op3} </p>
-                {/* <p><Link to={"/edit/"+this.props.todo._id}><FaPencilAlt className="editIcon" type="button" class="rounded float-end"/></Link></p> */}
-                <div> 
-                <p><FaPencilAlt className="editIcon" type="button" class="rounded float-end" style={{color:"blue"}} data-bs-toggle="modal" data-bs-target="#editq"/></p>
-                 <EditQ/> 
-                </div>
-                </div> 
-
-                <div class="col-lg-12">    
-                <p>{this.props.todo.op4} </p>
-                <div> 
-                <p><FaTimes type="button" className="delIcon" class="rounded float-end" style={{color:"red"}} data-bs-toggle="modal" data-bs-target="#del"/></p>
-    <Del/>
-                 
-                {/* <div class="modal fade" id="del" tabIndex="-1" aria-labelledby="delLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="delLabel">Confirm</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <p>Are you sure you want to delete?</p>
-      </div>
-      <div class="modal-footer">
-      <button type="button" class="btn btn-primary" onClick={this.deleteStudent}>Delete</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-         
-      </div>
-    </div>
-  </div>
-</div> */}
-
-
-                </div>
-                </div>
-    </div>
+              <p>
+                <FaTimes
+                  className='delIcon'
+                  class='rounded float-end'
+                  type='button'
+                  style={{ color: 'red' }}
+                  data-bs-toggle='modal'
+                  data-bs-target={`#delete-modal-${todo._id}`}
+                />
+              </p>
+              <div className="modal fade" id={`delete-modal-${todo._id}`} tabIndex="-1" aria-labelledby="delete-modal-label" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"  ></button>
+            </div>
+            <div className="modal-body">
+              Are you sure you want to delete?
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" className="btn btn-danger" onClick={onDelete}>Delete</button>
+            </div>
+          </div>
         </div>
         </div>
-  )
-}
-}
+              </div>
+     
+
+       
+  );
+};
+
+export default Delete;

@@ -1,24 +1,21 @@
- 
-import Questions from './Questions';
-import { useParams } from "react-router-dom";
+import KTs from './KTs';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
  
-const TodosList = (props) => {
-  const { id } = useParams();
+const UnitList = () => {
   const [todos, setTodos] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/units/${id}`)
+    axios.get('http://localhost:4000/kts/')
       .then(response => {
-        setTodos(response.data.quiz.questions);
+        setTodos(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [id]);
+  }, []);
+
    
-  
 
   return (
     <div>
@@ -26,15 +23,16 @@ const TodosList = (props) => {
             <div> 
           {todos.map(todo => {
             return (
-              <Questions key={todo._id} todo={todo} />
+              <KTs key={todo._id} todo={todo} />
             )
           })}
           </div>
-            
+           
           </div>
          
     
   );
 }
 
-export default TodosList;
+export default UnitList;
+

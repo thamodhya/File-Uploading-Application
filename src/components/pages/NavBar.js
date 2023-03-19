@@ -1,46 +1,4 @@
-// import { Link } from "react-router-dom";
-// import logo from "../images/logo.png"
-// import bell from '../images/bell.png';
-// import user from '../images/user.png';
-
-// const NavBar = () => {
-//     return (
-//         <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "#70B9E6" }}>
-//             <div className="container-fluid">
-//                 <Link class="navbar-brand" to="/">
-//                     <img src={logo} width="35" height="35" alt="logo"/>
-//                 </Link>
-//                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-//                     <span className="navbar-toggler-icon"></span>
-//                 </button>
-//                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-//                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-//                         <li className="nav-item">
-//                             <a className="nav-link active" aria-current="page" href="/">Home</a>
-//                         </li>
-//                         <li className="nav-item">
-//                             <a className="nav-link" href="#">Leaderboard</a>
-//                         </li>
-//                         <li className="nav-item">
-//                             <a className="nav-link" href="#">Guidance</a>
-//                         </li>
-                        
-//                     </ul>
-//                     <div className="container-fluid d-grid gap-2 d-md-flex justify-content-md-end">
-//                     <img src={bell} width="35" height="35" alt="logo"/>
-//                     <img src={user} width="35" height="35" alt="logo"/>
-//                     </div>
-//                     {/* <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-//                     <button class="btn btn-primary me-md-2" type="button">Button</button>
-//                     <button class="btn btn-primary" type="button">Button</button>
-//                     </div> */}
-//                 </div>
-//             </div>
-//         </nav>
-//     );
-// }
-// export default NavBar;
-
+ 
 import React from "react";
 import { Link } from "react-router-dom";
 //import "../css/Nav.css"

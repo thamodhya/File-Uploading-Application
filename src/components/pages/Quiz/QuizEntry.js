@@ -1,10 +1,35 @@
-import React from "react";
+import React, { useState ,useEffect} from 'react';
 import { Link } from "react-router-dom";
 import { FaPencilAlt } from 'react-icons/fa';
+import { useParams } from "react-router-dom";
+import axios from 'axios';
+
 import NavBar from "../NavBar";
 import EditQuizEntry from './EditQuizEntry';
 
-const QuizEntry = () => {
+const QuizEntry = (props) => {
+  const { id } = useParams();
+   
+  const [updatedTodo, setUpdatedTodo] = useState({
+    quizName: '',
+    quizDesc: '',
+});
+useEffect(() => {
+  axios.get(`http://localhost:4000/units/${id}`)
+    .then(response => {
+       
+      const { quizName, quizDesc } = response.data.quiz;
+      setUpdatedTodo({ quizName, quizDesc });
+       
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}, [id]);
+ 
+
+
+
     return (
         <React.Fragment>
             <div style={{backgroundColor: "#ffffff"}}> 
@@ -45,19 +70,20 @@ const QuizEntry = () => {
                     <br></br>
                   <br></br>
                     <div class="col-lg-12">
-                    <h3 style={{ font: "25px" , color: "#000000" }}>Quiz 01</h3>
+                    <h3 style={{ font: "25px" , color: "#000000" }}>{updatedTodo.quizName}</h3>
                     <div> 
-                    <FaPencilAlt type="button" data-bs-toggle="modal" data-bs-target="#editentry" className="editIcon" class="rounded float-end" style={{color:"blue",justifyContent:"end"}}/>
-                    <EditQuizEntry/> 
+                     
+                    <EditQuizEntry id={id} /> 
+                     
                     </div> 
                     </div>
 
-                    <p>Time Allocated: 1 hour</p>
+                    <p>{updatedTodo.quizDesc}</p>
                      
                      
                     <div class="d-grid gap-2 col-6 mx-auto">                    
                     {/* <button class="btn btn-secondary" type="button">View Quiz</button> */}
-                    <Link to='/quiz'><button type="button" class="btn btn-secondary form-control" >Quiz</button></Link>
+                    <Link to={'/quiz/'+id}><button type="button" class="btn btn-secondary form-control" >Quiz</button></Link>
                     </div>
                     <br></br>
                   <br></br>

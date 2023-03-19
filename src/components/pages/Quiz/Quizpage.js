@@ -1,14 +1,16 @@
 import React from 'react'
 import { useState } from 'react';
 import { FaPencilAlt, FaTimes } from 'react-icons/fa';
- 
+import { useParams } from "react-router-dom";
+
 import Buttons from './Buttons';
 import AddQuiz from './AddQuiz';
-//import QuestionList from './QuestionList';
-import EditQ from './EditQ';
+import QuestionList from './QuestionList';
+ 
 import Del from '../Del';
 
-function Quizpage() {
+function Quizpage(props) {
+  const { id } = useParams();
     const [showAddTask, setShowAddTask] = useState(false); // To reveal add task form
     return (
       <React.Fragment>
@@ -27,7 +29,7 @@ function Quizpage() {
   <Buttons showForm={() => setShowAddTask(!showAddTask)}  changeTextAndColor={showAddTask} />
   
   {/* Revealing of Add Task Form */}
-  {showAddTask && <AddQuiz   />}
+  {showAddTask && <AddQuiz  id={id} />}
   </div>
 
       <div className='card'>
@@ -66,17 +68,18 @@ function Quizpage() {
 <br></br>
 <div className="container-fluid d-grid gap-2 d-md-flex justify-content-md-end">
 <FaPencilAlt type="button" data-bs-toggle="modal" data-bs-target="#editkt" className="editIcon" class="rounded float-end" style={{color:"blue",justifyContent:"end"}}/>
-    <EditQ/> 
+    {/* <EditQ/>  */}
 <p><FaTimes type="button" className="delIcon" class="rounded float-end" style={{color:"red"}} data-bs-toggle="modal" data-bs-target="#del"/></p>
     <Del/>
                      </div>
 <br></br>
       </div>
 
-  {/* <QuestionList/> */}
+   
 
 
   </div>
+  <QuestionList id={id}/>
   <br></br>
    
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">  

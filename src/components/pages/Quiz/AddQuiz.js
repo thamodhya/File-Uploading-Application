@@ -1,82 +1,76 @@
-import React, {Component} from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import swal from "sweetalert";
+import { useParams } from "react-router-dom";
 
-export default class AddQuiz extends Component {
+export default function AddQuiz() {
+    const {id}=useParams();
+     
+    const [question, setquestion] = useState('');
+    const [op1, setop1] = useState('');
+    const [op2, setop2] = useState('');
+    const [op3, setop3] = useState('');
+    const [op4, setop4] = useState('');
 
-    constructor(props) {
-        super(props);
-
-        this.onChangequiz = this.onChangequiz.bind(this);
-        this.onChangeop1 = this.onChangeop1.bind(this);
-        this.onChangeop2 = this.onChangeop2.bind(this);
-        this.onChangeop3 = this.onChangeop3.bind(this);
-        this.onChangeop4 = this.onChangeop4.bind(this);
-         
-        this.onSubmit = this.onSubmit.bind(this);
-
-        this.state = {
-            quiz: '',
-            op1: '',
-            op2: '',
-            op3: '',
-            op4: '',
-             
-        }
+    const onChangequestion = (e) => {
+        setquestion(e.target.value);
     }
 
-    onChangequiz(e) {
-        this.setState({
-            quiz: e.target.value
-        });
+    const onChangeop1 = (e) => {
+        setop1(e.target.value);
     }
 
-    onChangeop1(e) {
-        this.setState({
-            op1: e.target.value
-        });
+    const onChangeop2 = (e) => {
+        setop2(e.target.value);
     }
 
-    onChangeop2(e) {
-        this.setState({
-            op2: e.target.value
-        });
+    const onChangeop3 = (e) => {
+        setop3(e.target.value);
     }
 
-    onChangeop3(e) {
-        this.setState({
-            op3: e.target.value
-        });
+    const onChangeop4 = (e) => {
+        setop4(e.target.value);
     }
 
-    onChangeop4(e) {
-        this.setState({
-            op4: e.target.value
-        });
+     
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        swal({
+            icon: "success",
+            text: "Successfully created",
+          });
+        console.log(`Form submitted:`);
+        console.log(`question: ${question}`);
+        console.log(`op1: ${op1}`);
+        console.log(`op2: ${op2}`);
+        console.log(`op3: ${op3}`);
+        console.log(`op4: ${op4}`);
+
+        const newTodo = {
+            question: question,
+            op1: op1,
+            op2: op2,
+            op3: op3,
+            op4: op4,
+        };
+
+        axios.post(`http://localhost:4000/units/${id}/quiz`, newTodo)
+            .then(res => console.log(res.data.quiz));
+
+            setquestion('');
+            setop1('');
+            setop2('');
+            setop3('');
+            setop4('');
     }
      
-    onSubmit(e) {
-        e.preventDefault();
-
-        console.log(`Quiz submitted:`);
-        // console.log(`KT Name: ${this.state.kt_name}`);
-        // console.log(`KT Introduction: ${this.state.kt_intro}`);
-         
-         
-
-        this.setState({
-            quiz: '',
-            op1: '',
-            op2: '',
-            op3: '',
-            op4: '',
-             
-        })
-    }
-
-    render() {
+     
+     
         return (
             <div style={{marginTop: 20}}>
                
-                <form onSubmit={this.onSubmit}>
+                <form onSubmit={onSubmit}>
                     <div className='card'> 
                      
                     <div className="form-control">
@@ -84,23 +78,13 @@ export default class AddQuiz extends Component {
                         <label>Write the question.</label>
                         <input  type="text"
                                 className="form-control"
-                                value={this.state.quiz}
+                                value={question}
                                 required
-                                onChange={this.onChangequiz}
+                                onChange={onChangequestion}
                                 />
                         <br></br>
                          
-                        {/* <label>Option 01</label>
-                        <div class="form-check">
-  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"/>
-  <label class="form-check-label" for="flexRadioDefault1">
-  <input  type="text"
-                                className="form-control"
-                                value={this.state.op1}
-                                onChange={this.onChangeop1}
-                                />
-  </label>
-</div> */}
+                       
 
 <label for="basic-url" class="form-label">Option 01</label>
                         <div class="input-group">
@@ -112,8 +96,8 @@ export default class AddQuiz extends Component {
                         aria-label="Radio button for following text input"/>
   </div>
   <input type="text" class="form-control" 
-  value={this.state.op1}
-  onChange={this.onChangeop1}
+  value={op1}
+  onChange={onChangeop1}
   for="flexRadioDefault1"
   aria-label="Text input with radio button"/>
 </div>
@@ -129,8 +113,8 @@ export default class AddQuiz extends Component {
                         aria-label="Radio button for following text input"/>
   </div>
   <input type="text" class="form-control" 
-  value={this.state.op2}
-  onChange={this.onChangeop2}
+  value={op2}
+  onChange={onChangeop2}
   for="flexRadioDefault2"
   aria-label="Text input with radio button"/>
 </div>
@@ -146,8 +130,8 @@ export default class AddQuiz extends Component {
                         aria-label="Radio button for following text input"/>
   </div>
   <input type="text" class="form-control" 
-  value={this.state.op3}
-  onChange={this.onChangeop3}
+  value={op3}
+  onChange={onChangeop3}
   for="flexRadioDefault3"
   aria-label="Text input with radio button"/>
 </div>
@@ -163,8 +147,8 @@ export default class AddQuiz extends Component {
                         aria-label="Radio button for following text input"/>
   </div>
   <input type="text" class="form-control" 
-  value={this.state.op4}
-  onChange={this.onChangeop4}
+  value={op4}
+  onChange={onChangeop4}
   for="flexRadioDefault4"
   aria-label="Text input with radio button"/>
 </div>
@@ -180,6 +164,7 @@ export default class AddQuiz extends Component {
             </div>
         )
     }
-}
+
 
  
+     

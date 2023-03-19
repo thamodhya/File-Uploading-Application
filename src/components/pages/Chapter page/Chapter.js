@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
  
 
 import AddTask from './AddTask';
-import Task from './Task';
+import TodosList from './Task';
 import Header from '../Header';
-import EditTask from './EditTask';
+import Ed from '../Ed';
 import Del from '../Del';
 
 function Chapter() {
@@ -30,7 +30,7 @@ function Chapter() {
     <h3 style={{ font: "25px" , color: "#000000" }}><Link to={"/Unit"} style={{textDecoration:"none",color: "#000000"}}>Class Diagrams</Link></h3>
     <div> 
     <FaPencilAlt type="button" data-bs-toggle="modal" data-bs-target="#editunit" className="editIcon" class="rounded float-end" style={{color:"blue",justifyContent:"end"}}/>
-    <EditTask/> 
+    <Ed/> 
     </div> 
     </div>
 
@@ -45,7 +45,7 @@ function Chapter() {
 </div>
  
 </div>
-<Task ></Task> 
+<TodosList></TodosList> 
 </div> 
 
 </div>

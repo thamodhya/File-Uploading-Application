@@ -1,10 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
- 
+import { useParams } from "react-router-dom";
+
 import NavBar from "../NavBar";
 import Unit from './Unit';
 
-const UnitContent = () => {
+const UnitContent = (props) => {
+     
+    const { id } = useParams();
+
     return (
         <React.Fragment>
             <div style={{backgroundColor: "#fefefe"}}> 
@@ -50,10 +54,11 @@ const UnitContent = () => {
                     </div>
                     <div className="card-footer">
                          
-                    <Link to='/quiz/view'><button type="button" class="btn btn-primary form-control" >Quiz</button></Link>
+                    <Link to={"/quiz/view/"+id}><button type="button" class="btn btn-primary form-control">Quiz</button></Link>
+
                     </div>
                 </div>
-                 <p></p>
+                 <p></p> 
                  </div>
             </div>
         </React.Fragment>
