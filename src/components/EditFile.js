@@ -157,7 +157,7 @@ const Edit = ({ file }) => {
                   {errors.fileName && <div className="invalid-feedback">{errors.fileName}</div>}
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="fileDesc" className="form-label">Article Introduction</label>
+                  <label htmlFor="fileDesc" className="form-label">File Introduction</label>
                   <input
                     type="text"
                     className={`form-control ${errors.articleDesc && 'is-invalid'}`}
