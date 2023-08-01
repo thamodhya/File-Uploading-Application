@@ -1,30 +1,29 @@
 import Edit from "./EditFile";
 import Delete from "./DeleteFile";
-import { Link } from "react-router-dom";
-import pdf from './image/pdf.png'; 
+import files from "./image/images.png"
 
-const Articles = ({ article }) => {
+const Files = ({ file }) => {
     return(
         <div>
-      <div className='card'>
+      <div className='card' style={{ backgroundColor: '#DDEDF8' }}>
         <div className='card-body' style={{ backgroundColor: '#DDEDF8',height:"250px",width:"450px" }}>
           <div class='col-lg-12'> 
          
         <h3 style={{ font: '25px', color: '#000000' }}>
-              {article.articleName}
+              {file.fileName}
             </h3>
              <div>
-              <Edit key={article._id} article={article} />
+              <Edit key={file._id} file={file} />
              </div>
-            <p>{article.articleDesc} </p>
+            <p>{file.fileDesc} </p>
             <div> 
-              <Delete key={article._id} article={article} />
+              <Delete key={file._id} file={file} />
              </div>
             </div>
              
             <p>
-  <a href={article.articleUrl} target="_blank" rel="noopener noreferrer">
-    <img src={pdf} height="20px" width="20px" alt="pdf" />
+  <a href={file.fileUrl} target="_blank" rel="noopener noreferrer">
+    <img src={files} height="20px" width="20px" alt="pdf" />
   </a>
 </p>
 
@@ -33,4 +32,4 @@ const Articles = ({ article }) => {
             </div>
     )
 }
-export default Articles;
+export default Files;

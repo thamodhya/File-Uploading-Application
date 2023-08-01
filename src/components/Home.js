@@ -7,34 +7,34 @@ function App() {
         sendRedirect: false,
         recieveRedirect: false,
     })
-    const handleOnClickSend = () => {
+    const handleOnClickUpload = () => {
         setRedirect((prev) => ({ ...prev, sendRedirect: true }))
     }
-    const handleOnClickRecieve = () => {
+    const handleOnClickStorage = () => {
         setRedirect((prev) => ({ ...prev, recieveRedirect: true }))
     }
 
     if (redirect.sendRedirect) {
-        return <Navigate to="/send" />
+        return <Navigate to="/upload" />
     } else if (redirect.recieveRedirect) {
-        return <Navigate to="/download" />
+        return <Navigate to="/storage" />
     }
     return (
         <div className="MainContainer">
             <div className="centralPanel">
                 <div className="panelContent">
-                    <h1>Swiftshare.</h1>
+                    <h1>EasyStore.</h1>
                     <p>
-                        It is a file sharing app which allows you to upload and
-                        share a file from your pc or mobile and transfer it to
-                        anyone across the internet quickly and easily.
+                        This is a file uploading app which allows you to upload and
+                        view a file from your pc and download it
+                        anytime across the internet quickly and easily.
                     </p>
                     <div className="lead">
                         <div className="Selection">
                             <button
                                 id="send"
                                 className="Selection-button"
-                                onClick={handleOnClickSend}
+                                onClick={handleOnClickUpload}
                             >
                                 Upload File
                             </button>{' '}
@@ -42,7 +42,7 @@ function App() {
                             <button
                                 id="recieve"
                                 className="Selection-button"
-                                onClick={handleOnClickRecieve}
+                                onClick={handleOnClickStorage}
                             >
                                 File Storage
                             </button>

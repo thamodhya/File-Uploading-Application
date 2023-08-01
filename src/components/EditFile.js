@@ -13,29 +13,27 @@ import {
 } from "firebase/storage";
 import { storage } from "../firebase";
 import { v4 } from "uuid";
-import { Link } from "react-router-dom";
-import pdf from './image/pdf.png';
+ 
 
-const Edit = ({ article }) => {
-  const userid = "648050d3b39dcbdf90027b5a";
-  const chapterName = "diagrams";
+const Edit = ({ file }) => {
+   
   const [updatedFile, setUpdatedFile] = useState(null);
   const [modal, setModal] = useState(null);
-  const [updatedarticle, setUpdatedarticle] = useState(article);
+  const [updatedfile, setUpdatedfile] = useState(file);
   const [errors, setErrors] = useState({});
   const [uploading, setUploading] = useState(false); // New state for tracking upload status
 
   const validationSchema = Yup.object().shape({
-    articleName: Yup.string().required('Article name is required'),
-    articleDesc: Yup.string().required('Description is required'),
+    fileName: Yup.string().required('file name is required'),
+    fileDesc: Yup.string().required('Description is required'),
   });
 
   const onChange = (e) => {
     if (e.target.type === 'file') {
       setUpdatedFile(e.target.files[0]);
     } else {
-      setUpdatedarticle({
-        ...updatedarticle,
+      setUpdatedfile({
+        ...updatedfile,
         [e.target.name]: e.target.value
       });
     }
@@ -45,33 +43,31 @@ const Edit = ({ article }) => {
     e.preventDefault();
 
     try {
-      await validationSchema.validate(updatedarticle, { abortEarly: false });
-
-      const formData = new FormData();
+      await validationSchema.validate(updatedfile, { abortEarly: false });
 
       if (updatedFile) {
         // Delete the current file from Firebase Storage
-        const articleRef = ref(storage, article.articleUrl);
-        deleteObject(articleRef)
+        const fileRef = ref(storage, file.fileUrl);
+        deleteObject(fileRef)
           .then(() => {
             // Upload the new file to Firebase Storage
-            const newVideoRef = ref(storage, `Articles/${updatedFile.name + v4()}`);
+            const newfileRef = ref(storage, `Files/${updatedFile.name + v4()}`);
             setUploading(true); // Set the uploading state to true
-            uploadBytes(newVideoRef, updatedFile)
+            uploadBytes(newfileRef, updatedFile)
               .then((snapshot) => {
                 // Get the download URL of the new file
                 getDownloadURL(snapshot.ref)
                   .then((url) => {
-                    // Update the KT session with the new file's URL
+                    // Update the file with the new file's URL
                     const updatedArticle = {
-                      ...updatedarticle,
-                      articleUrl: url
+                      ...updatedfile,
+                      fileUrl: url
                     };
                     updateArticle(updatedArticle);
                   });
               })
               .catch((error) => {
-                console.log('Error uploading new article:', error);
+                console.log('Error uploading new file:', error);
                 swal({
                   icon: 'warning',
                   text: 'Error',
@@ -82,15 +78,15 @@ const Edit = ({ article }) => {
               });
           })
           .catch((error) => {
-            console.log('Error deleting current article:', error);
+            console.log('Error deleting current file:', error);
             swal({
               icon: 'warning',
               text: 'Error',
             });
           });
       } else {
-        // No file update, only update the KT session details
-        updateArticle(updatedarticle);
+        // No file update, only update the file details
+        updateArticle(updatedfile);
       }
     } catch (err) {
       console.error(err);
@@ -106,8 +102,8 @@ const Edit = ({ article }) => {
     }
   };
 
-  const updateArticle = (updatedArticle) => {
-    axios.post(`http://localhost:1337/arts/update/${article._id}`, updatedArticle)
+  const updateArticle = (updatedfile) => {
+    axios.post(`http://localhost:1337/files/update/${file._id}`, updatedfile)
       .then(() => {
         setModal(null);
         swal({
@@ -124,26 +120,7 @@ const Edit = ({ article }) => {
           text: 'Error',
         });
       });
-
-    const editData = {
-      chapterName: chapterName,
-      updatedby: userid,
-      articleName: updatedArticle.articleName,
-      articleDesc: updatedArticle.articleDesc,
-      old_data: {
-        articleName: article.articleName,
-        articleDesc: article.articleDesc,
-      },
-      //updated_at: moment.utc().format('YYYY-MM-DD hh:mm:ss A'),
-    };
-
-    axios.post("http://localhost:1337/editarticles/add", editData)
-      .then(() => {
-        console.log("Edit history data saved successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+     
   };
 
   return (
@@ -155,10 +132,10 @@ const Edit = ({ article }) => {
           class='rounded float-end'
           style={{ color: 'blue' }}
           data-bs-toggle='modal'
-          data-bs-target={`#edit-modal-${article._id}`}
+          data-bs-target={`#edit-modal-${file._id}`}
         />
       </p>
-      <div className="modal fade" id={`edit-modal-${article._id}`} tabIndex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
+      <div className="modal fade" id={`edit-modal-${file._id}`} tabIndex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -168,37 +145,37 @@ const Edit = ({ article }) => {
             <div className="modal-body">
               <form onSubmit={onUpdate}>
                 <div className="mb-3">
-                  <label htmlFor="articleName" className="form-label">Article Name</label>
+                  <label htmlFor="fileName" className="form-label">File Name</label>
                   <input
                     type="text"
-                    className={`form-control ${errors.articleName && 'is-invalid'}`}
-                    id="articleName"
-                    name="articleName"
-                    value={updatedarticle.articleName}
+                    className={`form-control ${errors.fileName && 'is-invalid'}`}
+                    id="fileName"
+                    name="fileName"
+                    value={updatedfile.fileName}
                     onChange={onChange}
                   />
-                  {errors.articleName && <div className="invalid-feedback">{errors.articleName}</div>}
+                  {errors.fileName && <div className="invalid-feedback">{errors.fileName}</div>}
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="articleDesc" className="form-label">Article Introduction</label>
+                  <label htmlFor="fileDesc" className="form-label">Article Introduction</label>
                   <input
                     type="text"
                     className={`form-control ${errors.articleDesc && 'is-invalid'}`}
-                    id="articleDesc"
-                    name="articleDesc"
-                    value={updatedarticle.articleDesc}
+                    id="fileDesc"
+                    name="fileDesc"
+                    value={updatedfile.fileDesc}
                     onChange={onChange}
                   />
-                  {errors.articleDesc && <div className="invalid-feedback">{errors.articleDesc}</div>}
+                  {errors.fileDesc && <div className="invalid-feedback">{errors.fileDesc}</div>}
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="Attachment" className="form-label">Article Attachment</label>
+                  <label htmlFor="Attachment" className="form-label">File Attachment</label>
                    
                 </div>
                 <div className="mb-3">
                   <p>If you want to change the file, add the new file here.</p>
-                  <input type="file" accept=".pdf,.doc,.docx" className="form-control" aria-label="file example" onChange={onChange} />
-                  <p>Only pdf and word files are allowed.</p>
+                  <input type="file" className="form-control" aria-label="file example" onChange={onChange} />
+                   
                 </div>
                 <div className="modal-footer">
                   <input type="submit" value={uploading ? 'Uploading...' : 'Update'} className="btn btn-primary" disabled={uploading} />

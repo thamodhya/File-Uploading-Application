@@ -7,19 +7,18 @@ import { ref, deleteObject } from 'firebase/storage';
 import { storage } from '../firebase';
  
 
-const Delete = ({ article }) => {
-  const chapterName = "diagrams";
-  const userid = "648050d3b39dcbdf90027b5a";
+const Delete = ({ file }) => {
+   
   const navigate = useNavigate();
    
   const onDelete = () => {
-    // Delete the video file from Firebase Storage
-    const articleRef = ref(storage, article.articleUrl);
-    deleteObject(articleRef)
+    // Delete the file from Firebase Storage
+    const fileRef = ref(storage, file.fileUrl);
+    deleteObject(fileRef)
       .then(() => {
-        // Once the video file is deleted, delete the KT session from the backend
+        // Once the file is deleted, delete the file from the backend
         axios
-          .delete(`http://localhost:1337/arts/delete/${article._id}`)
+          .delete(`http://localhost:1337/files/delete/${file._id}`)
           .then((res) => {
             console.log(res.data);
             swal({
@@ -28,7 +27,7 @@ const Delete = ({ article }) => {
             }).then(() => {
               window.location.reload(); // Refresh the page
             });
-            navigate('/article');
+            navigate('/storage');
           })
           .catch((error) => {
             console.log(error);
@@ -45,27 +44,7 @@ const Delete = ({ article }) => {
           text: 'Error',
         });
       });
-
-      const deleteData = {
-        chapterName: chapterName,
-        createdBy:article.createdBy,
-        deletedBy: userid,
-        articleName: article.articleName,
-        articleDesc: article.articleDesc,
-        old_data: {
-          articleName: article.articleName,
-          articleDesc: article.articleDesc,
-        },
-        //updated_at: moment.utc().format('YYYY-MM-DD hh:mm:ss A'),
-      };
-  
-      axios.post("http://localhost:1337/deletearticles/add", deleteData)
-        .then(() => {
-          console.log("Delete history data saved successfully");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+       
   };
 
   return (
@@ -77,10 +56,10 @@ const Delete = ({ article }) => {
           type='button'
           style={{ color: 'red' }}
           data-bs-toggle='modal'
-          data-bs-target={`#delete-modal-${article._id}`}
+          data-bs-target={`#delete-modal-${file._id}`}
         />
       </p>
-      <div className="modal fade" id={`delete-modal-${article._id}`} tabIndex="-1" aria-labelledby="delete-modal-label" aria-hidden="true">
+      <div className="modal fade" id={`delete-modal-${file._id}`} tabIndex="-1" aria-labelledby="delete-modal-label" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

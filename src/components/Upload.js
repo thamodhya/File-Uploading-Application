@@ -7,20 +7,19 @@ import { storage } from '../firebase';
 import { v4 } from 'uuid';
 import './Css/Send.css'
 
-function Send() {
-    const chapterId = '64848a1cd792d9e0909c70e0';
-    const userid = '648050d3b39dcbdf90027b5a';
-    const [articleUpload, setArticleUpload] = useState(null);
+function Upload() {
+     
+    const [fileUpload, setfileUpload] = useState(null);
     const [uploading, setUploading] = useState(false); // New state for tracking upload status
   
     const validationSchema = Yup.object().shape({
-      articleName: Yup.string().required('Article name is required'),
-      articleDesc: Yup.string().required('Description is required'),
-      articleFile: Yup.mixed()
+      fileName: Yup.string().required('file name is required'),
+      fileDesc: Yup.string().required('Description is required'),
+      File: Yup.mixed()
         .required('File is required')
         .test(
           'fileFormat',
-          'Only pdf and word files are allowed',
+           
           (value) =>
             value &&
             ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(
@@ -29,47 +28,49 @@ function Send() {
         ),
     });
   
-    const [articleName, setarticleName] = useState('');
-    const [articleDesc, setarticleDesc] = useState('');
+    const [fileName, setfileName] = useState('');
+    const [fileDesc, setfileDesc] = useState('');
     const [errors, setErrors] = useState({});
   
-    const onChangeArtName = (e) => {
-      setarticleName(e.target.value);
+    const onChangefileName = (e) => {
+      setfileName(e.target.value);
     };
   
-    const onChangeArtIntro = (e) => {
-      setarticleDesc(e.target.value);
+    const onChangefileIntro = (e) => {
+      setfileDesc(e.target.value);
     };
   
     async function onSubmit(e) {
       e.preventDefault();
       try {
         await validationSchema.validate(
-          { articleName: articleName, articleDesc: articleDesc, articleFile: articleUpload },
+          { fileName: fileName, fileDesc: fileDesc, File: fileUpload },
           { abortEarly: false }
         );
   
         console.log(`Form submitted:`);
-        console.log(`Article Name: ${articleName}`);
-        console.log(`Article Introduction: ${articleDesc}`);
+        console.log(`file Name: ${fileName}`);
+        console.log(`file Introduction: ${fileDesc}`);
   
-        var newArticle = {
-          belongsToChapter: chapterId,
-          createdBy: userid,
-          articleName: articleName,
-          articleDesc: articleDesc,
+        var newfile = {
+           
+          fileName: fileName,
+          fileDesc: fileDesc,
         };
   
-        if (articleUpload == null) return;
+        if (fileUpload == null) return;
+
+      const fileExt = fileUpload.name.split('.').pop(); // Extract file extension
+      const fileNameWithExt = `${fileName}.${fileExt}`; // Append the extension to the file name
+
+      const fileRef = ref(storage, `Files/${fileNameWithExt + v4()}`);
+      setUploading(true); 
   
-        const articleRef = ref(storage, `Articles/${articleUpload.name + v4()}`);
-        setUploading(true); // Set the uploading state to true
-  
-        uploadBytes(articleRef, articleUpload).then((article) => {
-          getDownloadURL(article.ref).then((url) => {
+        uploadBytes(fileRef, fileUpload).then((file) => {
+          getDownloadURL(file.ref).then((url) => {
             console.log(url);
-            newArticle = { ...newArticle, articleUrl: url };
-            axios.post('http://localhost:1337/arts/add', newArticle).then((res) => {
+            newfile = { ...newfile, fileUrl: url };
+            axios.post('http://localhost:1337/files/add', newfile).then((res) => {
               console.log(res.data);
               swal({
                 icon: 'success',
@@ -77,8 +78,8 @@ function Send() {
               }).then(() => {
                 window.location.reload(); // Refresh the page
               });
-              setarticleName('');
-              setarticleDesc('');
+              setfileName('');
+              setfileDesc('');
               setErrors({});
             });
           });
@@ -130,38 +131,38 @@ function Send() {
                  <div >
       <form onSubmit={onSubmit}>
         <div className="form-control">
-          <label>Article</label>
+          <label>File</label>
           <input
             type="text"
-            className={`form-control ${errors.articleName && 'is-invalid'}`}
-            value={articleName}
-            onChange={onChangeArtName}
+            className={`form-control ${errors.fileName && 'is-invalid'}`}
+            value={fileName}
+            onChange={onChangefileName}
           />
-          {errors.articleName && <div className="invalid-feedback">{errors.articleName}</div>}
+          {errors.fileName && <div className="invalid-feedback">{errors.fileName}</div>}
           <br></br>
           <label>Introduction </label>
           <input
             type="text"
-            className={`form-control ${errors.articleDesc && 'is-invalid'}`}
-            value={articleDesc}
-            onChange={onChangeArtIntro}
+            className={`form-control ${errors.fileDesc && 'is-invalid'}`}
+            value={fileDesc}
+            onChange={onChangefileIntro}
           />
-          {errors.articleDesc && <div className="invalid-feedback">{errors.articleDesc}</div>}
+          {errors.fileDesc && <div className="invalid-feedback">{errors.fileDesc}</div>}
           <br></br>
           <input
             type="file"
-            //accept=".pdf,.doc,.docx"
-            className={`form-control ${errors.articleFile && 'is-invalid'}`}
+             
+            className={`form-control ${errors.fileFile && 'is-invalid'}`}
             aria-label="file example"
             onChange={(event) => {
-              setArticleUpload(event.target.files[0]);
+              setfileUpload(event.target.files[0]);
             }}
           />
-          {errors.articleFile && <div className="invalid-feedback">{errors.articleFile}</div>}
+          {errors.fileFile && <div className="invalid-feedback">{errors.fileFile}</div>}
           {uploading && <p className="upload-status" style={{color:"#013220"}}>Uploading file...</p>}  
-          <p>Only pdf and word files are allowed.</p>
+           
           <br></br>
-          <input type="submit" value="Save Article" className="btn btn-primary" disabled={uploading} /> {/* Disable the button while uploading */}
+          <input type="submit" value="Save File" className="btn btn-primary" disabled={uploading} /> {/* Disable the button while uploading */}
         </div>
       </form>
     </div>
@@ -175,4 +176,4 @@ function Send() {
      
 }
 
-export default Send
+export default Upload
